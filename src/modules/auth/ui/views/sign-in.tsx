@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {FaGoogle, FaGithub} from "react-icons/fa"
 import { useState } from "react";
 
 import { OctagonAlertIcon } from "lucide-react";
@@ -22,37 +22,57 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
 
-
-
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, { message: "Password required" }),
 });
 
 export const SignInView = () => {
-    const router = useRouter()
-    const [pending,setPending] = useState(false)
-    const [error, setError] = useState<string | null>(null);
+ 
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const onSubmit = (data: z.infer<typeof formSchema>) =>{
-        setError(null)
-        setPending(true)
-        authClient.signIn.email(
-            {
-                email: data.email,
-                password:data.password
-            },
-            {
-                onSuccess: ()=>{
-                    router.push("/")
-                },
-                onError: ({error})=>{
-                    setError(error.message)
-                }
-            }
-        )
-        setPending(false)
-    }
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setError(null);
+    setPending(true);
+    authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/"
+      },
+      {
+        onSuccess: () => {
+          setPending(false)
+        },
+        onError: ({ error }) => {
+          setError(error.message);
+        },
+      }
+    );
+    setPending(false);
+  };
+  const socialSubmit = (provider: "google" | "github") => {
+      setError(null);
+      setPending(true);
+      authClient.signIn.social(
+        {
+          provider: provider,
+          callbackURL: "/"
+        },
+        {
+          onSuccess: () => {
+            setPending(false)
+           
+          },
+          onError: ({ error }) => {
+            setPending(false)
+            setError(error.message);
+          },
+        }
+      );
+      setPending(false);
+    };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -114,47 +134,71 @@ export const SignInView = () => {
                   />
                 </div>
                 {!!error && (
-                    <Alert className="bg-destructive/10 border-none">
-                        <OctagonAlertIcon className="h-4 w-4 !text-destructive" />
-                        <AlertTitle>{error}</AlertTitle>
-                    </Alert>
+                  <Alert className="bg-destructive/10 border-none">
+                    <OctagonAlertIcon className="h-4 w-4 !text-destructive" />
+                    <AlertTitle>{error}</AlertTitle>
+                  </Alert>
                 )}
-                <Button type={"submit"} disabled={pending}>Sign in</Button>
-                <div className="after:border-boder relative text-center 
+                <Button type={"submit"} disabled={pending}>
+                  Sign in
+                </Button>
+                <div
+                  className="after:border-boder relative text-center 
                 text-sm after:absolute after:inset-0 after:top-1/2 
-                after:z-0 after:flex after:items-center after:border-t">
-                    <span className="bg-card text-muted-foreground relative z-10 px-2">
-                        Or continue with
-                    </span>
+                after:z-0 after:flex after:items-center after:border-t"
+                >
+                  <span className="bg-card text-muted-foreground relative z-10 px-2">
+                    Or continue with
+                  </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <Button disabled={pending} variant= "outline" type={"button"} className="w-full">
-                        Google
-                    </Button>
-                    <Button disabled={pending} variant= "outline" type={"button"} className="w-full">
-                        GitHub
-                    </Button>
+                  <Button
+                    disabled={pending}
+                    variant="outline"
+                    type={"button"}
+                    className="w-full"
+                    onClick={() => socialSubmit("google")}
+                  >
+                    <FaGoogle/>
+                  </Button>
+                  <Button
+                    disabled={pending}
+                    onClick={() => socialSubmit("github")}
+                    variant="outline"
+                    type={"button"}
+                    className="w-full cursor-pointer"
+                  >
+                    <FaGithub/>
+                  </Button>
                 </div>
                 <div className="text-center text-sm">
-                    Don't have an account{" "}
-                    <Link href="/auth/sign-up" className="underline underline-offset-2">
-                     Sign up
-                    </Link>
+                  Don't have an account{" "}
+                  <Link
+                    href="/auth/sign-up"
+                    className="underline underline-offset-2"
+                  >
+                    Sign up
+                  </Link>
                 </div>
               </div>
             </form>
           </Form>
 
-          <div className="bg-radial from-green-700 to-green-900 relative hidden 
-          md:flex flex-col gap-y-4 items-center justify-center">
+          <div
+            className="bg-radial from-blue-700 to-blue-900 relative hidden 
+          md:flex flex-col gap-y-4 items-center justify-center"
+          >
             <img src="/logo.svg" alt="image" className="h-[92px] w-[92px]" />
             <p className="text-2xl font-semibold text-white">Agent.pool</p>
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center 
-      text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you argree to our <a href="#">Termes of Service</a> and <a>Privacy Policy</a>
+      <div
+        className="text-muted-foreground *:[a]:hover:text-primary text-center 
+      text-xs text-balance *:[a]:underline *:[a]:underline-offset-4"
+      >
+        By clicking continue, you argree to our{" "}
+        <a href="#">Termes of Service</a> and <a>Privacy Policy</a>
       </div>
     </div>
   );

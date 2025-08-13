@@ -3,8 +3,8 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {FaGoogle, FaGithub} from "react-icons/fa"
 
 import { OctagonAlertIcon } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -21,6 +21,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -38,12 +39,12 @@ const formSchema = z
   );
 
 export const SignUpView = () => {
-  const router = useRouter();
+  const router = useRouter()
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const Submit = (data: z.infer<typeof formSchema>) => {
-    console.log("inside the onSubmit");
+    
     setError(null);
     setPending(true);
     authClient.signUp.email(
@@ -51,10 +52,31 @@ export const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        callbackURL: "/"
       },
       {
         onSuccess: () => {
-          router.push("/");
+          setPending(false)
+          router.push("/")
+        },
+        onError: ({ error }) => {
+          setError(error.message);
+        },
+      }
+    );
+    setPending(false);
+  };
+  const socialSubmit = (provider: "google" | "github") => {
+    setError(null);
+    setPending(true);
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/"
+      },
+      {
+        onSuccess: () => {
+          setPending(false)
         },
         onError: ({ error }) => {
           setError(error.message);
@@ -181,17 +203,19 @@ export const SignUpView = () => {
                     disabled={pending}
                     variant="outline"
                     type="button"
-                    className="w-full"
+                    className="w-full cursor-pointer"
+                    onClick={() => socialSubmit("google")}
                   >
-                    Google
+                    <FaGoogle/>
                   </Button>
                   <Button
                     disabled={pending}
                     variant="outline"
                     type="button"
-                    className="w-full"
+                    onClick={() => socialSubmit("github")}
+                    className="w-full cursor-pointer"
                   >
-                    GitHub
+                    <FaGithub/>
                   </Button>
                 </div>
                 <div className="text-center text-sm">
@@ -208,7 +232,7 @@ export const SignUpView = () => {
           </Form>
 
           <div
-            className="bg-radial from-green-700 to-green-900 relative hidden 
+            className="bg-radial from-blue-700 to-blue-900 relative hidden 
           md:flex flex-col gap-y-4 items-center justify-center"
           >
             <img src="/logo.svg" alt="image" className="h-[92px] w-[92px]" />
