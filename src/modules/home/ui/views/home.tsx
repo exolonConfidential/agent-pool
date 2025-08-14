@@ -12,7 +12,6 @@ export const HomeView = () => {
     <div>
       <h1>{session?.user.name}</h1>
       <Button
-        variant={"destructive"}
         onClick={() =>
           authClient.signOut({
             fetchOptions: {
