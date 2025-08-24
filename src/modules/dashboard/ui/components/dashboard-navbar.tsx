@@ -22,7 +22,7 @@ export const DashboardNavbar = () =>{
                 </Button>
                 <Button onClick={()=> setCommandOpen((open) => !open)} className="h-9 w-[240px] text-muted-foreground hoever:text-muted-foreground justify-start font-normal" variant="outline">
                     <Search/>
-                    Search
+                    Search...
                     <kbd className="h-5 pointer-events-none ml-auto inline-flex items-center gap-1 px-1 bg-muted rounded border select-none text-[15px] font-mono font-medium text-muted-foreground">
                         <span className="text-xs">
                             &#8984;
