@@ -1,26 +1,43 @@
-import { AgentErrorView, AgentLoadingView, AgentView } from "@/modules/agents/ui/views/agents-view"
-import { getQueryClient, trpc } from "@/trpc/server"
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
-import { ErrorBoundary } from "react-error-boundary"
-import { Suspense } from "react"
+import {
+  AgentErrorView,
+  AgentLoadingView,
+  AgentView,
+} from "@/modules/agents/ui/views/agents-view";
+import { getQueryClient, trpc } from "@/trpc/server";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import { Suspense } from "react";
+import { AgentListHeader } from "@/modules/agents/ui/components/agents-list-header";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const agent_page = async () =>{ 
-const queryClient = getQueryClient()
-await queryClient.prefetchQuery(trpc.agents.getAll.queryOptions())
+const agent_page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-    return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <Suspense fallback={<AgentLoadingView />}>
-                <ErrorBoundary fallback= {<AgentErrorView />}>
-                    <AgentView/>
-                </ErrorBoundary>
-            </Suspense>
-        </HydrationBoundary>
-    )
-}
+  if (!session) {
+    redirect("/auth/sign-in");
+  }
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(trpc.agents.getAll.queryOptions());
 
-export default agent_page
+  return (
+    <>
+      <AgentListHeader />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Suspense fallback={<AgentLoadingView />}>
+          <ErrorBoundary fallback={<AgentErrorView />}>
+            <AgentView />
+          </ErrorBoundary>
+        </Suspense>
+      </HydrationBoundary>
+    </>
+  );
+};
 
+export default agent_page;
 
 /**
  * AgentPage explanation:
