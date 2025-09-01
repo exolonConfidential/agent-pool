@@ -9,18 +9,30 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAgentsFilter } from "../../hooks/use-agents-filters";
 import { DataPagination } from "../components/data-pagination";
+import { useRouter } from "next/navigation";
 
 export const AgentView = () => {
-  const [filter,setFilter] = useAgentsFilter()
+  const router = useRouter();
+  const [filter, setFilter] = useAgentsFilter();
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.agents.getAll.queryOptions({
-    ...filter
-  }));
+  const { data } = useSuspenseQuery(
+    trpc.agents.getAll.queryOptions({
+      ...filter,
+    })
+  );
 
   return (
     <div className="w-full py-4 px-4 md:px-8 flex-1 flex flex-col pb-4 gap-y-6">
-      <DataTable data={data.items} columns={columns} />
-      <DataPagination page={filter.page} totalPages={data.totalPages} onPageChange={( page ) =>setFilter({page}) } />
+      <DataTable
+        data={data.items}
+        columns={columns}
+        onRowClick={(row) => router.push(`/agents/${row.id}`)}
+      />
+      <DataPagination
+        page={filter.page}
+        totalPages={data.totalPages}
+        onPageChange={(page) => setFilter({ page })}
+      />
       {data.items.length === 0 && (
         <EmptyState
           title="Create your first Agent"
