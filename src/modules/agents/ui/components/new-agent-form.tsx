@@ -35,14 +35,31 @@ export const AgentForm = ({
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
+      onSuccess: async (success) => {
+        await queryClient.invalidateQueries(
+            trpc.agents.getAll.queryOptions({})
+        )
+        
+        onSuccess?.()
+        toast.success(`Created Agent ${success.name}`)
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
+  );
+
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess:async (success) => {
+        await queryClient.invalidateQueries(
             trpc.agents.getAll.queryOptions({})
         )
         if(initialValues?.id){
-            queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id: initialValues.id}))
+            await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id: initialValues.id}))
         }
         onSuccess?.()
+        toast.success(`Updated Agent ${success.name}`)
       },
       onError: (error) => {
         toast.error(error.message)
@@ -59,10 +76,11 @@ export const AgentForm = ({
   });
 
   const isEdit = !!initialValues?.id;
-  const isPending = createAgent.isPending;
+  const isPending = createAgent.isPending || updateAgent.isPending
 
   const onSubmit = (values: z.infer<typeof agentInsertShcema>) => {
     if (isEdit) {
+      updateAgent.mutate({id: initialValues.id, ...values})
     } else {
       createAgent.mutate(values);
     }
