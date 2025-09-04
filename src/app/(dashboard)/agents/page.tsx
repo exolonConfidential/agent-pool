@@ -28,7 +28,7 @@ const agent_page = async ({searchPrams}:filterPorps) => {
     redirect("/auth/sign-in");
   }
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(trpc.agents.getAll.queryOptions({
+  void queryClient.prefetchQuery(trpc.agents.getAll.queryOptions({
     ...filters
   }));
 

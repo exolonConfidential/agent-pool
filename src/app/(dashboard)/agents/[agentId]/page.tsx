@@ -9,10 +9,10 @@ interface props {
     params: Promise<{agentId: string}>
 }
 
-const AgentIdPage =async ({params}: props) => {
+const AgentIdPage = async ({params}: props) => {
     const { agentId} = await params
     const queryClient = getQueryClient()
-    const data = queryClient.prefetchQuery(
+    void queryClient.prefetchQuery(
         trpc.agents.getOne.queryOptions({id: agentId})
     )
 

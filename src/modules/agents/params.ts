@@ -13,3 +13,4 @@ export  const filterSearchParams =  {
 
 export const loadSearchParams = createLoader(filterSearchParams)
 
+// this file is created so that we can sync the filterSearchParams on the server components for prefetch
