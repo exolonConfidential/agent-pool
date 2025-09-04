@@ -2,7 +2,7 @@ import { useTRPC } from "@/trpc/client";
 import { AgentGetOne } from "../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { agentInsertShcema } from "../../schema";
+import { agentInsertSchema } from "../../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -67,8 +67,8 @@ export const AgentForm = ({
     })
   );
 
-  const form = useForm<z.infer<typeof agentInsertShcema>>({
-    resolver: zodResolver(agentInsertShcema),
+  const form = useForm<z.infer<typeof agentInsertSchema>>({
+    resolver: zodResolver(agentInsertSchema),
     defaultValues: {
       name: initialValues?.name ?? "",
       instructions: initialValues?.instructions ?? "",
@@ -78,7 +78,7 @@ export const AgentForm = ({
   const isEdit = !!initialValues?.id;
   const isPending = createAgent.isPending || updateAgent.isPending
 
-  const onSubmit = (values: z.infer<typeof agentInsertShcema>) => {
+  const onSubmit = (values: z.infer<typeof agentInsertSchema>) => {
     if (isEdit) {
       updateAgent.mutate({id: initialValues.id, ...values})
     } else {

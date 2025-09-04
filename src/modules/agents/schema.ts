@@ -1,11 +1,11 @@
 
 import {z } from "zod"
 
-export const agentInsertShcema = z.object({
+export const agentInsertSchema = z.object({
     name: z.string().min(1, {message: "Name is required"}),
     instructions: z.string().min(1, {message: "Instructions are required"}),
 })
 
-export const agentUpdataShcema  = agentInsertShcema.extend({
+export const agentUpdataSchema  = agentInsertSchema.extend({
     id: z.string().min(1,{message: "Id is required"})
 })

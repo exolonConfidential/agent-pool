@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { agents } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
-import { agentInsertShcema, agentUpdataShcema } from "../schema";
+import { agentInsertSchema, agentUpdataSchema } from "../schema";
 import { z } from "zod";
 import { and, count, desc, eq, ilike } from "drizzle-orm";
 import {
@@ -77,7 +77,7 @@ export const agentsRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(agentInsertShcema)
+    .input(agentInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const [createdAgent] = await db
         .insert(agents)
@@ -107,7 +107,7 @@ export const agentsRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(
-      agentUpdataShcema
+      agentUpdataSchema
     )
     .mutation(async ({ input, ctx }) => {
       const [data] = await db

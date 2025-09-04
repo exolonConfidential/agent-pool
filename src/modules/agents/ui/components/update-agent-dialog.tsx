@@ -1,7 +1,7 @@
 "use client";
 import { ResponsiveDialong } from "@/components/responsive-dialog";
 
-import { AgentForm } from "./new-agent-form";
+import { AgentForm } from "./agent-form";
 import { AgentGetOne } from "../../types";
 
 interface NewAgentDialogProp {
