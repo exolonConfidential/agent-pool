@@ -1,6 +1,6 @@
 "use client";
 
-import { columns } from "@/components/column";
+import { columns } from "@/modules/agents/ui/components/column";
 import { DataTable } from "@/components/data-table";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorState } from "@/components/error-state";
