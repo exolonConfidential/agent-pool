@@ -9,7 +9,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { on } from "events";
+
 
 import { ChevronsUpDownIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
@@ -50,12 +50,12 @@ export const CommandSelect = ({
         type="button"
         variant={"outline"}
         className={cn(
-          "h-9 justify-between font-normal px-2",
+          "h-9 justify-between font-normal px-2 [&>img]:h-1",
           !selectedOption && "text-muted-foreground",
           className
         )}
       >
-        <div>{selectedOption?.children ?? placeholder}</div>
+        {selectedOption?.children ?? placeholder}
         <ChevronsUpDownIcon />
       </Button>
       <CommandResponsiveDialog onOpenChange={setOpen} open={open} shouldFilter= {!onSearch}>

@@ -7,13 +7,25 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { columns } from "../components/column";
 import { EmptyState } from "@/components/empty-state";
+import { useMeetingsFilter } from "../../hooks/use-meetings-filter";
+import { DataPagination } from "@/components/data-pagination";
 
 export const MeetingsVeiw = () => {
+  const [filters, setFilter] = useMeetingsFilter();
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.meetings.getAll.queryOptions({}));
+  const { data } = useSuspenseQuery(
+    trpc.meetings.getAll.queryOptions({
+      ...filters,
+    })
+  );
   return (
     <div className="w-full py-4 px-4 md:px-8 flex-1 flex flex-col pb-4 gap-y-6">
       <DataTable data={data.items} columns={columns} />
+      <DataPagination
+        page={filters.page}
+        onPageChange={(value) => setFilter({ page: value })}
+        totalPages={data.totalPages}
+      />
       {data.items.length === 0 && (
         <EmptyState
           title="Create your first meeting"
