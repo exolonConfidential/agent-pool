@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 
 
 
-interface NewAgentDialogProp {
+interface NewMeetingDialogProp {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const NewMeetingDialog = ({ open, onOpenChange }: NewAgentDialogProp) => {
+export const NewMeetingDialog = ({ open, onOpenChange }: NewMeetingDialogProp) => {
   const router = useRouter()
   return (
     <ResponsiveDialong

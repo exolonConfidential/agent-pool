@@ -9,9 +9,11 @@ import { columns } from "../components/column";
 import { EmptyState } from "@/components/empty-state";
 import { useMeetingsFilter } from "../../hooks/use-meetings-filter";
 import { DataPagination } from "@/components/data-pagination";
+import { useRouter } from "next/navigation";
 
 export const MeetingsVeiw = () => {
   const [filters, setFilter] = useMeetingsFilter();
+  const router = useRouter();
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(
     trpc.meetings.getAll.queryOptions({
@@ -20,7 +22,7 @@ export const MeetingsVeiw = () => {
   );
   return (
     <div className="w-full py-4 px-4 md:px-8 flex-1 flex flex-col pb-4 gap-y-6">
-      <DataTable data={data.items} columns={columns} />
+      <DataTable data={data.items} columns={columns} onRowClick={(row) => router.push(`/meetings/${row.id}`)}/>
       <DataPagination
         page={filters.page}
         onPageChange={(value) => setFilter({ page: value })}
