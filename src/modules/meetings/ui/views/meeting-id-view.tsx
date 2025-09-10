@@ -16,7 +16,7 @@ import { UpdateMeetingDialog } from "../components/update-meeting-dialog";
 import { UpcomingState } from "../components/upcoming-state";
 import { ActiveState } from "../components/active-state";
 import { CancelledState } from "../components/cancelled-state";
-import { ProcessingState } from "../components/cancelled-state copy";
+import { ProcessingState } from "../components/processing-state";
 
 interface prop {
   meetingId: string;

@@ -15,7 +15,7 @@ export const ActiveState = ({
   
 }: Props) => {
   return (
-    <div className="flex felx-col gap-y-8 items-center justify-center px-4 py-5">
+    <div className="bg-white flex flex-col gap-y-8 items-center justify-center px-4 py-5">
       <EmptyState
         title="Meeting is active."
         description="Meeting will end when all partivipants have left"
