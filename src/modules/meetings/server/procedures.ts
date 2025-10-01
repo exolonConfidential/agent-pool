@@ -13,7 +13,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { meetingsInsertSchema, meetingsUpdataSchema } from "../schema";
 import { MeetingStatus } from "../types";
-import { streamVideo } from "@/lib/stream-video";
+import { streamVideo } from "@/lib/stream-video"; 
 import { generateAvatarUri } from "@/lib/avatar";
 
 export const meetingsRouter = createTRPCRouter({
@@ -136,8 +136,8 @@ export const meetingsRouter = createTRPCRouter({
               closed_caption_mode: "auto-on",
             },
             recording: {
-              mode: "auto-on",
-              quality: "1080p",
+              mode: "available",
+              quality: "720p",
             },
           },
         },
